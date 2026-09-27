@@ -1,563 +1,802 @@
-#!/usr/bin/env bash
-# ============================================================
-#  Conexion BHTTP  |  Panel Profesional
-#  Desarrollado por: Felix & Jalmer
-#  Telegram: @null_ptr_404  |  @Nica505J
-# ============================================================
-set -uo pipefail
-# -------------------- COLORES --------------------
-R='\033[0;31m'      # Rojo
-G='\033[0;32m'      # Verde
-Y='\033[1;33m'      # Amarillo
-B='\033[0;34m'      # Azul
-C='\033[0;36m'      # Cyan
-M='\033[0;35m'      # Magenta
-W='\033[1;37m'      # Blanco
-D='\033[0;90m'      # Gris
-N='\033[0m'         # Reset
-BG='\033[42m'       # Fondo verde
-BC='\033[46m'       # Fondo cyan
-# -------------------- RUTAS --------------------
-DESTDIR="/usr/local/lib/bhttp"
-SERVER_PY="$DESTDIR/bhttp-server.py"
-UNIT="/etc/systemd/system/bhttp.service"
-SERVICE="bhttp"
-CONFIG="/etc/bhttp/nullcore.conf"
-CANDIDATOS=(8080 80 8443 443 2082 2095 8880 2052 3128)
-# -------------------- VARIABLES --------------------
-PUERTO=""
-SSHPORT=22
-VERSION="1.0.0"
-# -------------------- FUNCIONES BASE --------------------
-rojo()  { printf "${R}%s${N}\n" "$*"; }
-verde() { printf "${G}%s${N}\n" "$*"; }
-info()  { printf "  ${D}%s${N}\n" "$*"; }
-paso()  { printf "\n${C}[%s]${N} ${W}%s${N}\n" "$1" "$2"; }
-linea() { printf "${D}────────────────────────────────────────────────────────${N}\n"; }
-# -------------------- BANNER --------------------
-banner() {
-  clear
-  echo -e "${C}"
-  cat << 'EOF'
-░░      ░░░░      ░░░       ░░░        ░░       ░░░        ░
-▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒▒▒▒  ▒▒▒▒▒  ▒▒▒▒  ▒▒▒▒▒  ▒▒▒▒
-▓▓      ▓▓▓  ▓▓▓▓▓▓▓▓       ▓▓▓▓▓▓  ▓▓▓▓▓       ▓▓▓▓▓▓  ▓▓▓▓
-███████  ██  ████  ██  ███  ██████  █████  ███████████  ████
-██      ████      ███  ████  ██        ██  ███████████  ████
+#!/bin/bash
+
+#=========================================================
+#        KEVINTECH MULTI SCRIPT INSTALLER
+#        LICENSE SYSTEM v4.0 (BYPASSED / SIN KEY)
+#        PREMIUM SERVER EDITION
+#
+#        HTTPS / TLS SECURE EDITION
+#=========================================================
+
+set -o pipefail
+
+#=========================================================
+# COLORES
+#=========================================================
+
+RESET="\e[0m"
+BOLD="\e[1m"
+DIM="\e[2m"
+
+RED="\e[1;91m"
+GREEN="\e[1;92m"
+YELLOW="\e[1;93m"
+BLUE="\e[1;94m"
+MAGENTA="\e[1;95m"
+CYAN="\e[1;96m"
+WHITE="\e[1;97m"
+GRAY="\e[1;90m"
+
+PINK="\e[38;5;213m"
+PURPLE="\e[38;5;141m"
+VIOLET="\e[38;5;177m"
+SKY="\e[38;5;117m"
+LIME="\e[38;5;154m"
+GOLD="\e[38;5;220m"
+ORANGE="\e[38;5;214m"
+AQUA="\e[38;5;159m"
+
+#=========================================================
+# VARIABLES PRINCIPALES
+#=========================================================
+
+BASE="/etc/kevintech"
+TMP="/tmp/kevintech_install"
+
+REPO="https://github.com/kevinaldaircama/multi-script.git"
+
+INSTALL_PROTOCOLS="ON"
+
+SERVER_DOMAIN=""
+SERVER_IP=""
+DOMAIN_IP=""
+DOMAIN_IP_MATCH="NO"
+DNS_PROVIDER="Desconocido"
+
+SSL_TUNNEL="OFF"
+PROXY_STATUS="OFF"
+
+# VALORES FIJOS SIN KEY
+LICENSE_OWNER="Hazael Moreno"
+LICENSE_RESELLER="Directo"
+LICENSE_TYPE="unlimited"
+LICENSE_DELETE_AT="Indefinido"
+LICENSE_BOT="@multiscriptkeygen_bot"
+
+CLIENT_IP=""
+OS_NAME=""
+HOSTNAME_VALUE=""
+DATE_NOW=""
+
+SSHD_CFG="/etc/ssh/sshd_config"
+
+#=========================================================
+# CONFIGURACIÓN DE CURL / TLS
+#=========================================================
+
+export CURL_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+
+CURL_COMMON=(
+    --silent
+    --show-error
+    --location
+    --fail
+    --connect-timeout 7
+    --max-time 20
+    --retry 2
+    --retry-delay 1
+    --tlsv1.2
+    --proto '=https'
+)
+
+#=========================================================
+# LIMPIEZA
+#=========================================================
+
+cleanup() {
+    rm -rf "$TMP"
+}
+
+trap cleanup EXIT
+
+#=========================================================
+# FUNCIONES VISUALES
+#=========================================================
+
+clear_screen() {
+    clear 2>/dev/null || true
+}
+
+linea() {
+    echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+}
+
+linea_color() {
+    echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+}
+
+titulo() {
+
+    clear_screen
+
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${CYAN}║${RESET} ${PINK}${BOLD}                 KEVINTECH MULTI SCRIPT${RESET}              ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET} ${PURPLE}${BOLD}                 PREMIUM INSTALLER v4.0${RESET}              ${CYAN}║${RESET}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
+
+    echo
+    echo -e "${SKY}              🚀  S E C U R E   E D I T I O N  🚀${RESET}"
+    echo
+
+}
+
+seccion() {
+
+    echo
+    echo -e "${PURPLE}╔══════════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${PURPLE}║${RESET} ${WHITE}${BOLD} $1${RESET}"
+    echo -e "${PURPLE}╚══════════════════════════════════════════════════════════════╝${RESET}"
+    echo
+
+}
+
+ok() {
+    echo -e " ${GREEN}✔${RESET} ${WHITE}$1${RESET}"
+}
+
+info() {
+    echo -e " ${CYAN}◆${RESET} ${WHITE}$1${RESET}"
+}
+
+warn() {
+    echo -e " ${YELLOW}⚠${RESET} ${WHITE}$1${RESET}"
+}
+
+fail() {
+    echo -e " ${RED}✖${RESET} ${WHITE}$1${RESET}"
+}
+
+loading() {
+
+    local TEXT="$1"
+
+    echo -ne " ${CYAN}${TEXT}${RESET} "
+
+    for i in 1 2 3; do
+        echo -ne "${PURPLE}●${RESET}"
+        sleep 0.12
+    done
+
+    echo
+}
+
+pausa() {
+    sleep "${1:-1}"
+}
+
+error_exit() {
+
+    echo
+    echo -e "${RED}╔══════════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${RED}║${RESET} ${WHITE}${BOLD}❌ INSTALACIÓN DETENIDA${RESET}"
+    echo -e "${RED}╚══════════════════════════════════════════════════════════════╝${RESET}"
+    echo
+    echo -e " ${RED}✖${RESET} ${WHITE}$1${RESET}"
+    echo
+
+    cleanup
+
+    exit 1
+}
+
+#=========================================================
+# VALIDAR URL HTTPS
+#=========================================================
+
+validate_https_url() {
+
+    local URL="$1"
+
+    if [[ "$URL" != https://* ]]; then
+        fail "URL insegura rechazada:"
+        echo -e " ${RED}$URL${RESET}"
+        return 1
+    fi
+
+    if [[ "$URL" =~ [[:space:]] ]]; then
+        fail "La URL contiene espacios."
+        return 1
+    fi
+
+    return 0
+}
+
+#=========================================================
+# ROOT
+#=========================================================
+
+if [[ "$EUID" -ne 0 ]]; then
+
+    echo
+    echo -e "${RED}╔══════════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${RED}║${RESET} ${WHITE}${BOLD}🔒 PERMISOS ROOT NECESARIOS${RESET}"
+    echo -e "${RED}╚══════════════════════════════════════════════════════════════╝${RESET}"
+    echo
+
+    echo -e "${YELLOW}Ejecuta:${RESET}"
+    echo
+    echo -e "${CYAN}sudo -i${RESET}"
+    echo
+
+    exit 1
+fi
+
+#=========================================================
+# SISTEMA OPERATIVO
+#=========================================================
+
+if [[ ! -f /etc/os-release ]]; then
+    error_exit "No se pudo detectar el sistema operativo."
+fi
+
+source /etc/os-release
+
+if [[ "${ID:-}" != "ubuntu" ]]; then
+    error_exit "Este instalador solamente es compatible con Ubuntu."
+fi
+
+#=========================================================
+# VALIDAR REPO
+#=========================================================
+
+validate_https_url "$REPO" ||
+    error_exit "El repositorio no utiliza HTTPS."
+
+#=========================================================
+# CABECERA
+#=========================================================
+
+titulo
+
+echo -e "${GREEN}             ● SISTEMA COMPATIBLE DETECTADO ●${RESET}"
+echo
+
+echo -e "${WHITE}Sistema : ${SKY}${PRETTY_NAME}${RESET}"
+echo -e "${WHITE}Usuario : ${GOLD}root${RESET}"
+echo -e "${WHITE}Proyecto: ${MAGENTA}KevinTech Multi Script${RESET}"
+echo -e "${WHITE}Modo    : ${GREEN}Sin Key / Acceso Libre${RESET}"
+
+echo
+linea_color
+
+#=========================================================
+# PASO 0
+# DEPENDENCIAS
+#=========================================================
+
+seccion "📦 PASO 0  •  PREPARANDO EL SISTEMA"
+
+echo -e "${GRAY}Instalando las herramientas necesarias para KevinTech.${RESET}"
+echo
+
+export DEBIAN_FRONTEND=noninteractive
+
+loading "Actualizando repositorios"
+
+apt-get update -y >/dev/null 2>&1 ||
+    error_exit "No se pudieron actualizar los repositorios."
+
+ok "Repositorios actualizados."
+
+loading "Instalando dependencias"
+
+apt-get install -y \
+    curl \
+    wget \
+    git \
+    jq \
+    ca-certificates \
+    dnsutils \
+    sudo \
+    openssl \
+    unzip \
+    zip \
+    tar \
+    nano \
+    cron \
+    net-tools \
+    lsof \
+    screen \
+    bc \
+    socat \
+    openssh-server \
+    ufw \
+    fail2ban \
+    >/dev/null 2>&1 ||
+    error_exit "No se pudieron instalar las dependencias."
+
+update-ca-certificates >/dev/null 2>&1 || true
+
+ok "Dependencias instaladas."
+
+#=========================================================
+# PASO 1 Y 2 (OMITIDOS / BYPASS DE LICENCIA)
+#=========================================================
+
+seccion "🔑 PASO 1  •  CONFIGURACIÓN DE ACCESO"
+
+ok "Sistema configurado en modo libre (sin restricciones de Key)."
+ok "Propietario asignado: $LICENSE_OWNER"
+
+#=========================================================
+# PASO 4
+# DOMINIO
+#=========================================================
+
+seccion "🌐 PASO 2  •  CONFIGURACIÓN DE DOMINIO"
+
+loading "Detectando IP pública"
+
+SERVER_IP="$(curl "${CURL_COMMON[@]}" -4 https://api.ipify.org 2>/dev/null)" || true
+[[ -z "$SERVER_IP" ]] && SERVER_IP="$(hostname -I 2>/dev/null | awk '{print $1}')"
+[[ -z "$SERVER_IP" ]] && SERVER_IP="Desconocida"
+
+read -r -p "$(echo -e "${CYAN}🌐 Dominio del VPS (ENTER = usar IP ${SERVER_IP}):${RESET} ")" SERVER_DOMAIN
+SERVER_DOMAIN="$(printf '%s' "$SERVER_DOMAIN" | tr -d '[:space:]')"
+
+if [[ -z "$SERVER_DOMAIN" ]]; then
+    SERVER_DOMAIN="$SERVER_IP"
+    DOMAIN_MODE="IP"
+    ok "Sin dominio. Se utilizará la IP del VPS: $SERVER_IP"
+elif [[ "$SERVER_DOMAIN" =~ ^[a-zA-Z0-9.-]+$ ]] && [[ "$SERVER_DOMAIN" == *.* ]]; then
+    DOMAIN_MODE="DOMAIN"
+    ok "Dominio configurado: $SERVER_DOMAIN"
+else
+    warn "Dominio inválido. Se utilizará la IP del VPS: $SERVER_IP"
+    SERVER_DOMAIN="$SERVER_IP"
+    DOMAIN_MODE="IP"
+fi
+
+DOMAIN_IP_MATCH="NO"
+DNS_PROVIDER="Desconocido"
+
+loading "Comprobando DNS"
+
+DOMAIN_IP=""
+if [[ "${DOMAIN_MODE:-DOMAIN}" == "DOMAIN" ]]; then
+    DOMAIN_IP="$(dig +short A "$SERVER_DOMAIN" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)"
+fi
+
+if [[ -n "$DOMAIN_IP" && "$DOMAIN_IP" == "$SERVER_IP" ]]; then
+    DOMAIN_IP_MATCH="YES"
+    ok "El dominio apunta correctamente al VPS."
+else
+    warn "El dominio todavía no apunta a este VPS."
+    [[ -n "$DOMAIN_IP" ]] && {
+        echo -e " ${GRAY}IP encontrada:${RESET} ${YELLOW}$DOMAIN_IP${RESET}"
+        echo -e " ${GRAY}IP VPS:${RESET} ${CYAN}$SERVER_IP${RESET}"
+    }
+fi
+
+NS="$(dig +short NS "$SERVER_DOMAIN" | tr '\n' ' ')"
+
+if echo "$NS" | grep -qi "cloudflare"; then
+    DNS_PROVIDER="Cloudflare"
+elif echo "$NS" | grep -Eqi "awsdns|route53"; then
+    DNS_PROVIDER="AWS Route 53"
+elif echo "$NS" | grep -Eqi "google"; then
+    DNS_PROVIDER="Google Cloud DNS"
+elif echo "$NS" | grep -qi "azure"; then
+    DNS_PROVIDER="Azure DNS"
+elif echo "$NS" | grep -qi "namecheap"; then
+    DNS_PROVIDER="Namecheap"
+elif echo "$NS" | grep -qi "godaddy"; then
+    DNS_PROVIDER="GoDaddy"
+elif echo "$NS" | grep -qi "porkbun"; then
+    DNS_PROVIDER="Porkbun"
+fi
+
+echo -e " ${GRAY}Proveedor DNS:${RESET} ${SKY}$DNS_PROVIDER${RESET}"
+
+#=========================================================
+# PASO 5
+# OPENSSH
+#=========================================================
+
+seccion "🔒 PASO 3  •  CONFIGURANDO SSH"
+
+loading "Activando OpenSSH"
+
+systemctl enable ssh >/dev/null 2>&1 || error_exit "No se pudo habilitar OpenSSH."
+systemctl restart ssh >/dev/null 2>&1 || error_exit "No se pudo iniciar OpenSSH."
+
+if systemctl is-active --quiet ssh; then
+    ok "OpenSSH activo."
+else
+    error_exit "OpenSSH no está activo."
+fi
+
+#=========================================================
+# SSH HARDENING
+#=========================================================
+
+info "Aplicando protección SSH..."
+
+if [[ -f "$SSHD_CFG" ]]; then
+    cp "$SSHD_CFG" "${SSHD_CFG}.kevintech.backup"
+    sed -i \
+        -e '/^[[:space:]]*#\?[[:space:]]*MaxAuthTries[[:space:]]/d' \
+        -e '/^[[:space:]]*#\?[[:space:]]*ClientAliveInterval[[:space:]]/d' \
+        -e '/^[[:space:]]*#\?[[:space:]]*ClientAliveCountMax[[:space:]]/d' \
+        "$SSHD_CFG"
+
+    cat >> "$SSHD_CFG" <<'EOF'
+
+#=========================================================
+# KevinTech SSH configuration
+#=========================================================
+
+MaxAuthTries 3
+ClientAliveInterval 300
+ClientAliveCountMax 2
+
 EOF
-  echo -e "${N}"
-  echo -e "          ${W}B H T T P   P R O T O C O L${N}  ${D}v${VERSION}${N}"
-  echo -e "          ${G}Felix${N} ${D}&${N} ${C}Jalmer${N}  ${D}|  Panel Version${N}"
-  linea
-}
-# -------------------- VERIFICAR ROOT --------------------
-check_root() {
-  if [ "$(id -u 2>/dev/null || echo 0)" != 0 ]; then
-    rojo "Ejecuta como root:  sudo bash $0"
-    exit 2
-  fi
-}
-# -------------------- CARGAR CONFIG --------------------
-cargar_config() {
-  mkdir -p /etc/bhttp
-  if [ -f "$CONFIG" ]; then
-    source "$CONFIG"
-  fi
-  [ -z "${PUERTO:-}" ] && PUERTO=""
-  [ -z "${SSHPORT:-}" ] && SSHPORT=22
-}
-guardar_config() {
-  mkdir -p /etc/bhttp
-  cat > "$CONFIG" <<EOF
-PUERTO=${PUERTO}
-SSHPORT=${SSHPORT}
+fi
+
+if sshd -t >/dev/null 2>&1; then
+    systemctl restart ssh
+    ok "Configuración SSH válida."
+else
+    fail "Error en la configuración SSH."
+    if [[ -f "${SSHD_CFG}.kevintech.backup" ]]; then
+        cp "${SSHD_CFG}.kevintech.backup" "$SSHD_CFG"
+        systemctl restart ssh
+        ok "Configuración SSH anterior restaurada."
+    fi
+fi
+
+#=========================================================
+# FAIL2BAN
+#=========================================================
+
+seccion "🛡️ PASO 4  •  PROTECCIÓN FAIL2BAN"
+
+mkdir -p /etc/fail2ban
+
+cat > /etc/fail2ban/jail.local <<'EOF'
+[DEFAULT]
+bantime = 1h
+findtime = 10m
+maxretry = 3
+
+[sshd]
+enabled = true
+port = ssh
+backend = systemd
 EOF
-}
-# -------------------- CREAR USUARIO --------------------
-crear_usuario() {
-  local u="$1" p="$2"
-  if id "$u" >/dev/null 2>&1; then
-    info "El usuario '$u' ya existe. Actualizando clave..."
-  else
-    useradd -M -s /bin/bash "$u" || { rojo "No se pudo crear el usuario '$u'"; return 1; }
-    info "Usuario '$u' creado (shell /bin/bash)"
-  fi
-  if [ -z "$p" ]; then
-    p="$(tr -dc 'A-Za-z0-9' </dev/urandom 2>/dev/null | head -c 12)"
-    [ -z "$p" ] && p="$(date +%s | tail -c 7)"
-    info "Clave generada automáticamente"
-  fi
-  echo "$u:$p" | chpasswd || { rojo "Error al establecer la clave"; return 1; }
-  USER_FINAL="$u"
-  PASS_FINAL="$p"
-  return 0
-}
-# -------------------- DIAGNÓSTICO --------------------
-diagnostico_ssh() {
-  paso "DIAG" "Comprobando entorno SSH / red"
-  local cfg="/etc/ssh/sshd_config" fwd=""
-  [ -r "$cfg" ] && fwd="$(grep -iE '^[[:space:]]*AllowTcpForwarding' "$cfg" | tail -1 | awk '{print tolower($2)}')"
-  if [ "$fwd" = "no" ]; then
-    rojo "  AllowTcpForwarding = no  →  El túnel NO podrá salir"
-    echo "     Solución: sed -i 's/^[[:space:]]*AllowTcpForwarding.*/AllowTcpForwarding yes/' $cfg && systemctl restart ssh"
-  else
-    info "AllowTcpForwarding: ${fwd:-yes (por defecto)} → OK"
-  fi
-  if timeout 5 bash -c 'exec 3<>/dev/tcp/8.8.8.8/53' 2>/dev/null; then
-    info "Salida TCP a 8.8.8.8:53 (DNS): OK"
-  else
-    rojo "  La VPS no alcanza 8.8.8.8:53 → Problema de salida de red"
-  fi
-  if command -v ss >/dev/null 2>&1 && ss -tln 2>/dev/null | grep -qE ":$SSHPORT\b"; then
-    info "sshd escuchando en puerto $SSHPORT: OK"
-  else
-    rojo "  No se detecta sshd en el puerto $SSHPORT"
-  fi
-}
-# -------------------- PUERTOS --------------------
-ocupados() {
-  if command -v ss >/dev/null 2>&1; then
-    ss -tln 2>/dev/null | tail -n +2 | awk '{print $4}' | sed 's/.*://'
-  elif command -v netstat >/dev/null 2>&1; then
-    netstat -tln 2>/dev/null | awk '/^tcp/ {print $4}' | sed 's/.*://'
-  fi | grep -E '^[0-9]+$' | sort -u
-}
-libre() { ! ocupados | grep -qx "$1"; }
-# -------------------- INSTALAR SERVIDOR --------------------
-instalar_servidor() {
-  banner
-  echo -e "${W}  Instalando conexión BHTTP...${N}"
-  linea
-  command -v python3 >/dev/null 2>&1 || { rojo "Falta python3. Instálalo: apt install -y python3"; return 1; }
-  paso "1/4" "Selección de puerto"
-  local primer_libre=""
-  for p in "${CANDIDATOS[@]}"; do libre "$p" && { primer_libre="$p"; break; }; done
-  if [ -z "$PUERTO" ]; then
-    read -r -p "  Puerto BHTTP [${primer_libre:-8080}]: " PUERTO
-    [ -z "$PUERTO" ] && PUERTO="${primer_libre:-8080}"
-  fi
-  if ! [[ "$PUERTO" =~ ^[0-9]+$ ]] || [ "$PUERTO" -lt 1 ] || [ "$PUERTO" -gt 65535 ]; then
-    rojo "Puerto inválido: $PUERTO"; return 1
-  fi
-  if ! libre "$PUERTO"; then
-    rojo "El puerto $PUERTO está ocupado"; return 1
-  fi
-  info "Puerto seleccionado: $PUERTO  |  Backend SSH: 127.0.0.1:$SSHPORT"
-  paso "2/4" "Escribiendo servidor Python"
-  mkdir -p "$DESTDIR"
-  cat > "$SERVER_PY" << 'PYEOF'
-#!/usr/bin/env python3
-# Servidor BHTTP autónomo (Null) - asyncio
-import argparse, asyncio, hashlib, struct, sys
-MAGIC = b"BHP1"
-LONGPOLL = 2.0
-def log(msg):
-    sys.stderr.write("[bhttp] %s\n" % msg); sys.stderr.flush()
-def keystream(sess, mode, seq, d, n):
-    base = hashlib.sha256(sess + bytes([mode]) + seq.to_bytes(8, "big") + bytes([d]))
-    out = bytearray(); c = 0
-    while len(out) < n:
-        h = base.copy(); h.update(c.to_bytes(4, "big")); out += h.digest(); c += 1
-    return bytes(out[:n])
-def mask(data, sess, mode, seq, d):
-    return bytes(a ^ b for a, b in zip(data, keystream(sess, mode, seq, d, len(data))))
-def probe_reply(mode, size):
-    n = size if (mode == 2 and size >= 10) else 10
-    out = bytearray(MAGIC + bytes([1, mode]) + size.to_bytes(4, "big"))
-    for i in range(10, n):
-        out.append((i * 31) & 255)
-    return bytes(out)
-class Session:
-    def __init__(self, sess, backend):
-        self.sess = sess
-        self.backend = backend
-        self.cond = asyncio.Condition()
-        self.up_next = 0
-        self.up_pending = {}
-        self.down_raw = bytearray()
-        self.down_chunks = {}
-        self.down_assign = 0
-        self.eof = False
-        self.closed = False
-        self.br = None
-        self.bw = None
-    async def connect(self):
-        host, port = self.backend
-        self.br, self.bw = await asyncio.open_connection(host, port)
-        log("sesion %s: conectada al backend %s:%d" % (self.sess.hex()[:8], host, port))
-        asyncio.create_task(self._reader())
-    async def _reader(self):
-        total = 0
-        try:
-            while True:
-                data = await self.br.read(65536)
-                if not data: break
-                total += len(data)
-                async with self.cond:
-                    self.down_raw += data
-                    self.cond.notify_all()
-        except Exception as e:
-            log("sesion %s: error leyendo del backend: %s" % (self.sess.hex()[:8], e))
-        finally:
-            log("sesion %s: el backend cerro (recibidos %d B)" % (self.sess.hex()[:8], total))
-            async with self.cond:
-                self.eof = True
-                self.cond.notify_all()
-    async def upload(self, seq, data):
-        async with self.cond:
-            if data:
-                self.up_pending[seq] = data
-            while self.up_next in self.up_pending:
-                chunk = self.up_pending.pop(self.up_next)
-                try:
-                    self.bw.write(chunk)
-                    await self.bw.drain()
-                except Exception:
-                    self.closed = True
-                self.up_next += 1
-    async def download(self, seq, maxlen, deadline):
-        if maxlen <= 0: maxlen = 1399
-        loop = asyncio.get_running_loop()
-        async with self.cond:
-            while True:
-                if seq < self.down_assign:
-                    return self.down_chunks.get(seq, b"")
-                if seq == self.down_assign:
-                    if self.down_raw:
-                        take = bytes(self.down_raw[:maxlen]); del self.down_raw[:maxlen]
-                        self.down_chunks[self.down_assign] = take
-                        self.down_assign += 1
-                        self.cond.notify_all()
-                        return take
-                    if self.eof:
-                        self.down_assign += 1
-                        self.cond.notify_all()
-                        return b""
-                if not self.eof and loop.time() < deadline:
-                    try:
-                        await asyncio.wait_for(self.cond.wait(), timeout=max(0.01, deadline - loop.time()))
-                    except asyncio.TimeoutError:
-                        pass
-                    continue
-                while self.down_assign <= seq:
-                    self.down_assign += 1
-                self.cond.notify_all()
-                return b""
-    async def ack(self, seq):
-        async with self.cond:
-            for k in [k for k in self.down_chunks if k <= seq]:
-                del self.down_chunks[k]
-    async def close(self):
-        async with self.cond:
-            self.closed = True
-            self.cond.notify_all()
-        try: self.bw.close()
-        except Exception: pass
-class Server:
-    def __init__(self, host, port, backend):
-        self.host, self.port, self.backend = host, port, backend
-        self.sessions = {}
-        self.slock = asyncio.Lock()
-    async def get_session(self, sess):
-        async with self.slock:
-            s = self.sessions.get(sess)
-            if s is None or s.closed:
-                for old_sid, old in list(self.sessions.items()):
-                    if old_sid != sess:
-                        await old.close()
-                        del self.sessions[old_sid]
-                s = Session(sess, self.backend)
-                await s.connect()
-                self.sessions[sess] = s
-                log("sesion %s: registrada (vivas: %d)" % (sess.hex()[:8], len(self.sessions)))
-            return s
-    async def handle(self, reader, writer):
-        try:
-            while True:
-                hdr = await reader.readexactly(29)
-                mode = hdr[0]
-                sess = hdr[1:17]
-                seq = int.from_bytes(hdr[17:25], "big")
-                ln = int.from_bytes(hdr[25:29], "big")
-                payload = b""
-                if ln and mode in (0, 1, 2, 3):
-                    raw = await reader.readexactly(ln)
-                    payload = mask(raw, sess, mode, seq, 0)
-                if payload[:4] == MAGIC:
-                    size = int.from_bytes(payload[6:10], "big") if len(payload) >= 10 else 0
-                    pmode = payload[5] if len(payload) >= 6 else mode
-                    body = mask(probe_reply(pmode, size), sess, mode, seq, 1)
-                    writer.write(bytes([0]) + len(body).to_bytes(4, "big") + body)
-                    await writer.drain()
-                    continue
-                s = await self.get_session(sess)
-                if mode == 1:
-                    await s.upload(seq, payload)
-                    writer.write(bytes([0]) + (0).to_bytes(4, "big"))
-                    await writer.drain()
-                elif mode == 2:
-                    chunk = await s.download(seq, ln if ln > 0 else 1399, asyncio.get_running_loop().time() + LONGPOLL)
-                    self._send_data(writer, sess, mode, seq, chunk)
-                    await writer.drain()
-                elif mode == 3:
-                    if len(payload) >= 6:
-                        chunk_size = int.from_bytes(payload[0:4], "big"); count = payload[5]
-                    else:
-                        chunk_size, count = 1399, 1
-                    if chunk_size <= 0: chunk_size = 1399
-                    if count <= 0: count = 1
-                    deadline = asyncio.get_running_loop().time() + LONGPOLL
-                    for i in range(count):
-                        chunk = await s.download(seq + i, chunk_size, deadline)
-                        self._send_data(writer, sess, mode, seq + i, chunk)
-                    await writer.drain()
-                elif mode == 4:
-                    await s.ack(seq)
-                    writer.write(bytes([0]) + (0).to_bytes(4, "big"))
-                    await writer.drain()
-                else:
-                    return
-        except (asyncio.IncompleteReadError, ConnectionError, OSError):
-            pass
-        except Exception as e:
-            log("handle: %r" % e)
-        finally:
-            try: writer.close()
-            except Exception: pass
-    def _send_data(self, writer, sess, mode, seq, data):
-        real = len(data)
-        masked = mask(data, sess, mode, seq, 1) if data else b""
-        body = real.to_bytes(4, "big") + masked
-        writer.write(bytes([2]) + len(body).to_bytes(4, "big") + body)
-    async def serve(self):
-        srv = await asyncio.start_server(self.handle, self.host, self.port, backlog=512)
-        print("BHTTP escuchando en %s:%d -> backend %s:%d" % (self.host, self.port, self.backend[0], self.backend[1]), flush=True)
-        async with srv:
-            await srv.serve_forever()
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--host", default="0.0.0.0")
-    ap.add_argument("--port", type=int, required=True)
-    ap.add_argument("--backend-host", default="127.0.0.1")
-    ap.add_argument("--backend-port", type=int, default=22)
-    a = ap.parse_args()
-    asyncio.run(Server(a.host, a.port, (a.backend_host, a.backend_port)).serve())
-if __name__ == "__main__":
-    main()
-PYEOF
-  chmod +x "$SERVER_PY"
-  if ! python3 -c "import ast,sys; ast.parse(open(sys.argv[1]).read())" "$SERVER_PY"; then
-    rojo "Error al escribir el servidor Python"; return 1
-  fi
-  info "Servidor instalado en $SERVER_PY"
-  paso "3/4" "Creando servicio systemd"
-  PYBIN="$(command -v python3)"
-  cat > "$UNIT" <<EOF
-[Unit]
-Description=BHTTP Server (puerto $PUERTO)
-After=network.target
-[Service]
-Type=simple
-ExecStart=$PYBIN $SERVER_PY --host 0.0.0.0 --port $PUERTO --backend-host 127.0.0.1 --backend-port $SSHPORT
-Restart=on-failure
-RestartSec=3
-[Install]
-WantedBy=multi-user.target
+
+systemctl enable fail2ban >/dev/null 2>&1 || true
+systemctl restart fail2ban >/dev/null 2>&1 || true
+
+if systemctl is-active --quiet fail2ban; then
+    ok "Fail2Ban activo."
+else
+    warn "Fail2Ban no pudo iniciarse."
+fi
+
+#=========================================================
+# FIREWALL
+#=========================================================
+
+seccion "🔥 PASO 5  •  CONFIGURANDO FIREWALL"
+
+info "Restableciendo reglas UFW..."
+
+ufw --force reset >/dev/null 2>&1 || true
+ufw default deny incoming >/dev/null 2>&1
+ufw default allow outgoing >/dev/null 2>&1
+
+ufw allow 22/tcp >/dev/null 2>&1
+ufw allow 80/tcp >/dev/null 2>&1
+ufw allow 443/tcp >/dev/null 2>&1
+ufw allow 53/udp >/dev/null 2>&1
+ufw allow 1194/tcp >/dev/null 2>&1
+
+ufw --force enable >/dev/null 2>&1 || warn "No se pudo activar UFW."
+
+if ufw status | grep -q "Status: active"; then
+    ok "Firewall activo."
+else
+    warn "UFW no está activo."
+fi
+
+#=========================================================
+# PASO 8
+# DESCARGAR KEVINTECH
+#=========================================================
+
+seccion "📥 PASO 6  •  INSTALANDO KEVINTECH"
+
+rm -rf "$TMP"
+mkdir -p "$TMP"
+
+validate_https_url "$REPO" || error_exit "Repositorio inseguro."
+
+loading "Descargando repositorio mediante HTTPS"
+
+git config --global protocol.version 2
+
+if ! git clone --depth 1 "$REPO" "$TMP" >/dev/null 2>&1; then
+    error_exit "No se pudieron descargar los archivos mediante HTTPS."
+fi
+
+ok "Repositorio descargado mediante HTTPS."
+
+if [[ ! -d "$TMP" ]]; then
+    error_exit "El repositorio descargado está vacío."
+fi
+
+mkdir -p "$BASE"
+cp -a "$TMP"/. "$BASE"/ || error_exit "No se pudieron copiar los archivos."
+
+mkdir -p \
+    "$BASE/protocolos" \
+    "$BASE/usuarios" \
+    "$BASE/sistema" \
+    "$BASE/logs" \
+    "$BASE/herramientas"
+
+if [[ -d "$TMP/telegram" ]]; then
+    mkdir -p "$BASE/telegram"
+    cp -a "$TMP/telegram"/. "$BASE/telegram"/
+    rm -f "$BASE/telegram/README.md" "$BASE/telegram/health.sh" "$BASE/telegram/service.sh" "$BASE/telegram/setup.sh" "$BASE/telegram/update.sh"
+fi
+
+find "$BASE" -type d -exec chmod 755 {} \;
+find "$BASE" -type f -name "*.sh" -exec chmod 755 {} \;
+
+ok "Archivos instalados."
+
+#=========================================================
+# CONFIGURACIÓN PRINCIPAL
+#=========================================================
+
+seccion "⚙️ PASO 7  •  CONFIGURACIÓN PRINCIPAL"
+
+cat > "$BASE/config.conf" <<EOF
+#=========================================================
+# KEVINTECH MULTI SCRIPT
+# CONFIGURATION (BYPASSED)
+#=========================================================
+
+SERVER_DOMAIN="$SERVER_DOMAIN"
+SERVER_IP="$SERVER_IP"
+DOMAIN_MODE="${DOMAIN_MODE:-DOMAIN}"
+
+DNS_PROVIDER="$DNS_PROVIDER"
+DOMAIN_IP_MATCH="$DOMAIN_IP_MATCH"
+
+SSL_TUNNEL="OFF"
+PROXY_STATUS="OFF"
+
+AUTO_START=OFF
+
+HTTPS_ONLY="ON"
+TLS_MIN_VERSION="1.2"
+
+LICENSE_API="LOCAL"
+LICENSE_OWNER="$LICENSE_OWNER"
+LICENSE_RESELLER="$LICENSE_RESELLER"
+LICENSE_TYPE="$LICENSE_TYPE"
+LICENSE_DELETE_AT="$LICENSE_DELETE_AT"
+
+OPENSSH=ON
+DROPBEAR=OFF
+SSL=OFF
+BADVPN=OFF
+UDP_CUSTOM=OFF
+HYSTERIA=OFF
+SLOWDNS=OFF
+XRAY=OFF
+V2RAY=OFF
+OPENVPN=OFF
+BHTTP=OFF
+ZIPVPN=OFF
+WEBSOCKET=OFF
+TROJAN=OFF
+SHADOWSOCKS=OFF
+SOCKS5=OFF
+
+SYSTEMDNS=OFF
+SQUID=OFF
+WEBMIN=OFF
+FAIL2BAN=ON
+BBR=OFF
 EOF
-  systemctl daemon-reload
-  systemctl enable "$SERVICE" >/dev/null 2>&1
-  systemctl restart "$SERVICE"
-  paso "4/4" "Verificando servicio"
-  sleep 2
-  if systemctl is-active --quiet "$SERVICE"; then
-    verde "Servicio activo y escuchando en el puerto $PUERTO"
-    guardar_config
-  else
-    rojo "El servicio no arrancó correctamente"
-    journalctl -u "$SERVICE" -n 15 --no-pager
+
+chmod 600 "$BASE/config.conf"
+
+#=========================================================
+# LICENSE CONF
+#=========================================================
+
+cat > "$BASE/license.conf" <<EOF
+LICENSE_OWNER="$LICENSE_OWNER"
+LICENSE_RESELLER="$LICENSE_RESELLER"
+LICENSE_TYPE="$LICENSE_TYPE"
+LICENSE_DELETE_AT="$LICENSE_DELETE_AT"
+
+LICENSE_API="LOCAL"
+LICENSE_STATUS="VALIDATED"
+LICENSE_BOT="$LICENSE_BOT"
+
+HTTPS_ONLY="ON"
+TLS_MIN_VERSION="1.2"
+EOF
+
+chmod 600 "$BASE/license.conf"
+
+ok "Configuración segura creada."
+
+#=========================================================
+# COMANDO MENU
+#=========================================================
+
+cat > /usr/local/bin/menu <<'EOF'
+#!/bin/bash
+
+BASE="/etc/kevintech"
+
+if [[ -f "$BASE/menu.sh" ]]; then
+    exec bash "$BASE/menu.sh" "$@"
+fi
+
+echo "❌ No se encontró $BASE/menu.sh"
+exit 1
+EOF
+
+chmod 755 /usr/local/bin/menu
+
+ok "Comando 'menu' instalado."
+
+#=========================================================
+# PASO 10
+# ACCESO ROOT
+#=========================================================
+
+seccion "👑 PASO 8  •  ACCESO ROOT"
+
+echo -e "${WHITE}¿Deseas establecer una contraseña para root?${RESET}"
+echo
+echo -e "${GREEN}Y${RESET} = Establecer contraseña"
+echo -e "${RED}N${RESET} = Continuar sin habilitar root por contraseña"
+echo
+
+read -r -p "$(echo -e "${GOLD}[Y/N]:${RESET} ")" ROOT_ACCESS
+ROOT_ACCESS="$(printf '%s' "$ROOT_ACCESS" | tr '[:upper:]' '[:lower:]')"
+
+if [[ "$ROOT_ACCESS" == "y" ]]; then
+    echo
+    passwd root
+
+    if [[ $? -eq 0 ]]; then
+        if [[ -f "$SSHD_CFG" ]]; then
+            sed -i \
+                -e '/^[[:space:]]*#\?[[:space:]]*PermitRootLogin[[:space:]]/d' \
+                -e '/^[[:space:]]*#\?[[:space:]]*PasswordAuthentication[[:space:]]/d' \
+                "$SSHD_CFG"
+
+            cat >> "$SSHD_CFG" <<'EOF'
+
+PermitRootLogin yes
+PasswordAuthentication yes
+EOF
+
+            if sshd -t >/dev/null 2>&1; then
+                systemctl restart ssh
+                ok "Acceso root habilitado."
+            else
+                fail "La configuración SSH no es válida."
+            fi
+        fi
+    else
+        fail "No se pudo cambiar la contraseña."
+    fi
+else
+    info "Root por contraseña no fue habilitado."
+fi
+
+#=========================================================
+# MÓDULOS
+#=========================================================
+
+seccion "🚀 PASO 9  •  INSTALACIÓN DE PROTOCOLOS"
+
+instalar_modulo() {
+    local NOMBRE="$1"
+    local ARCHIVO="$2"
+    local VARIABLE="$3"
+
+    if [[ ! -f "$ARCHIVO" ]]; then
+        return 2
+    fi
+
+    chmod 755 "$ARCHIVO"
+    info "Instalando $NOMBRE..."
+
+    if bash "$ARCHIVO" --auto >/dev/null 2>&1; then
+        ok "$NOMBRE instalado."
+        return 0
+    fi
     return 1
-  fi
-  local IP
-  IP="$(curl -fsS --max-time 4 https://api.ipify.org 2>/dev/null || hostname -I | awk '{print $1}')"
-  echo
-  verde "=== INSTALACIÓN COMPLETADA ==="
-  echo -e "  Host      : ${W}${IP}${N}"
-  echo -e "  Puerto    : ${W}${PUERTO}${N}"
-  echo -e "  Protocolo : ${W}bhttp${N}"
-  echo -e "  Backend   : ${W}127.0.0.1:${SSHPORT}${N}"
-  echo
-  read -p "  Presiona Enter para continuar..."
 }
-# -------------------- DESINSTALAR --------------------
-desinstalar() {
-  banner
-  echo -e "${Y}  ¿Seguro que deseas desinstalar el panel BHTTP? (s/N)${N}"
-  read -r conf
-  [[ "$conf" =~ ^[sS] ]] || return
-  systemctl stop "$SERVICE" 2>/dev/null
-  systemctl disable "$SERVICE" 2>/dev/null
-  rm -f "$UNIT"
-  rm -rf "$DESTDIR"
-  rm -f "$CONFIG"
-  systemctl daemon-reload 2>/dev/null
-  verde "Panel BHTTP desinstalado correctamente."
-  sleep 2
-}
-# -------------------- GESTIÓN DE USUARIOS --------------------
-menu_usuarios() {
-  while true; do
-    banner
-    echo -e "  ${W}GESTIÓN DE USUARIOS${N}"
-    linea
-    echo -e "  ${G}[1]${N}  Crear usuario para túnel"
-    echo -e "  ${G}[2]${N}  Listar usuarios del sistema"
-    echo -e "  ${G}[3]${N}  Cambiar clave de usuario"
-    echo -e "  ${G}[4]${N}  Eliminar usuario"
-    echo -e "  ${R}[0]${N}  Volver al menú principal"
-    linea
-    read -r -p "  Selecciona una opción: " op
-    case $op in
-      1)
-        echo
-        read -r -p "  Nombre de usuario: " nu
-        read -r -p "  Clave (dejar vacío = generar): " np
-        if crear_usuario "$nu" "$np"; then
-          verde "Usuario listo:"
-          echo -e "    Usuario : ${W}${USER_FINAL}${N}"
-          echo -e "    Clave   : ${W}${PASS_FINAL}${N}"
-        fi
-        read -p "  Enter para continuar..."
-        ;;
-      2)
-        echo
-        echo -e "${W}  Usuarios del sistema (UID >= 1000):${N}"
-        linea
-        awk -F: '$3 >= 1000 && $1 != "nobody" {print "  → " $1}' /etc/passwd
-        echo
-        read -p "  Enter para continuar..."
-        ;;
-      3)
-        echo
-        read -r -p "  Usuario: " nu
-        read -r -p "  Nueva clave: " np
-        if id "$nu" >/dev/null 2>&1; then
-          echo "$nu:$np" | chpasswd && verde "Clave actualizada"
-        else
-          rojo "Usuario no existe"
-        fi
-        read -p "  Enter para continuar..."
-        ;;
-      4)
-        echo
-        read -r -p "  Usuario a eliminar: " nu
-        if id "$nu" >/dev/null 2>&1; then
-          userdel -r "$nu" 2>/dev/null && verde "Usuario eliminado" || rojo "Error al eliminar"
-        else
-          rojo "Usuario no existe"
-        fi
-        read -p "  Enter para continuar..."
-        ;;
-      0) return ;;
-      *) rojo "Opción inválida" ;;
-    esac
-  done
-}
-# -------------------- CONTROL DE SERVICIO --------------------
-menu_servicio() {
-  while true; do
-    banner
-    local estado
-    estado=$(systemctl is-active "$SERVICE" 2>/dev/null || echo "inactive")
-    echo -e "  ${W}CONTROL DEL SERVICIO${N}   Estado: ${estado}"
-    linea
-    echo -e "  ${G}[1]${N}  Iniciar servicio"
-    echo -e "  ${G}[2]${N}  Detener servicio"
-    echo -e "  ${G}[3]${N}  Reiniciar servicio"
-    echo -e "  ${G}[4]${N}  Ver estado detallado"
-    echo -e "  ${G}[5]${N}  Ver logs en vivo"
-    echo -e "  ${R}[0]${N}  Volver"
-    linea
-    read -r -p "  Opción: " op
-    case $op in
-      1) systemctl start "$SERVICE" && verde "Servicio iniciado" || rojo "Error"; sleep 1 ;;
-      2) systemctl stop "$SERVICE" && verde "Servicio detenido" || rojo "Error"; sleep 1 ;;
-      3) systemctl restart "$SERVICE" && verde "Servicio reiniciado" || rojo "Error"; sleep 1 ;;
-      4) systemctl status "$SERVICE" --no-pager; read -p "Enter..." ;;
-      5) echo -e "${Y}Ctrl+C para salir de los logs${N}"; sleep 1; journalctl -u "$SERVICE" -f ;;
-      0) return ;;
-    esac
-  done
-}
-# -------------------- INFORMACIÓN --------------------
-info_sistema() {
-  banner
-  echo -e "  ${W}INFORMACIÓN DEL SISTEMA${N}"
-  linea
-  local IP
-  IP="$(curl -fsS --max-time 3 https://api.ipify.org 2>/dev/null || hostname -I | awk '{print $1}')"
-  echo -e "  IP Pública     : ${G}${IP}${N}"
-  echo -e "  Puerto BHTTP   : ${G}${PUERTO:-No instalado}${N}"
-  echo -e "  Puerto SSH     : ${G}${SSHPORT}${N}"
-  echo -e "  Estado servicio: $(systemctl is-active $SERVICE 2>/dev/null || echo 'no instalado')"
-  echo -e "  Sistema        : $(uname -srm)"
-  echo -e "  Uptime         : $(uptime -p 2>/dev/null || uptime)"
-  echo
-  diagnostico_ssh
-  echo
-  read -p "  Enter para volver..."
-}
-# -------------------- CRÉDITOS --------------------
-creditos() {
-  banner
-  echo -e "  ${W}CRÉDITOS${N}"
-  linea
-  echo -e "  ${G}Panel BHTTP${N}  v${VERSION}"
-  echo
-  echo -e "  Desarrollado por:"
-  echo -e "    ${W}Felix${N}   →  ${C}https://t.me/null_ptr_404${N}"
-  echo -e "    ${W}Jalmer${N}  →  ${C}https://t.me/Nica505J${N}"
-  echo
-  echo -e "  ${D}Protocolo BHTTP optimizado + Panel de gestión profesional${N}"
-  echo
-  linea
-  read -p "  Enter para volver..."
-}
-# -------------------- MENÚ PRINCIPAL --------------------
-menu_principal() {
-  while true; do
-    banner
-    local estado
-    estado=$(systemctl is-active "$SERVICE" 2>/dev/null || echo "no instalado")
-    echo -e "  Estado actual: ${estado}   |   Puerto: ${PUERTO:-—}"
-    linea
-    echo -e "  ${G}[1]${N}  Instalar / Reinstalar"
-    echo -e "  ${G}[2]${N}  Gestión de Usuarios"
-    echo -e "  ${G}[3]${N}  Control del Servicio"
-    echo -e "  ${G}[4]${N}  Información y Diagnóstico"
-    echo -e "  ${G}[5]${N}  Cambiar puerto SSH backend"
-    echo -e "  ${G}[6]${N}  Créditos"
-    echo -e "  ${R}[7]${N}  Desinstalar"
-    echo -e "  ${R}[0]${N}  Salir"
-    linea
-    read -r -p "  Selecciona una opción: " opcion
-    case $opcion in
-      1) instalar_servidor ;;
-      2) menu_usuarios ;;
-      3) menu_servicio ;;
-      4) info_sistema ;;
-      5)
-        read -r -p "  Nuevo puerto SSH backend [${SSHPORT}]: " nuevo
-        [ -n "$nuevo" ] && SSHPORT="$nuevo" && guardar_config && verde "Puerto SSH actualizado a $SSHPORT"
-        sleep 1
-        ;;
-      6) creditos ;;
-      7) desinstalar ;;
-      0) echo -e "\n  ${D}Panel BHTTP finalizado.${N}\n"; exit 0 ;;
-      *) rojo "Opción no válida" ;;
-    esac
-  done
-}
-# -------------------- INICIO --------------------
-check_root
-cargar_config
-menu_principal
+
+if systemctl is-active --quiet ssh; then
+    sed -i 's/^OPENSSH=.*/OPENSSH=ON/' "$BASE/config.conf"
+fi
+
+instalar_modulo "Dropbear" "$BASE/protocolos/dropbear.sh" "DROPBEAR"
+instalar_modulo "SSL Tunnel" "$BASE/protocolos/ssl.sh" "SSL"
+
+XRAY_SCRIPT=""
+[[ -f "$BASE/protocolos/xray.sh" ]] && XRAY_SCRIPT="$BASE/protocolos/xray.sh"
+[[ -f "$BASE/protocolos/v2ray.sh" ]] && XRAY_SCRIPT="$BASE/protocolos/v2ray.sh"
+[[ -n "$XRAY_SCRIPT" ]] && instalar_modulo "Xray / VMess" "$XRAY_SCRIPT" "XRAY"
+
+instalar_modulo "UDP Custom" "$BASE/protocolos/udpcustom.sh" "UDP_CUSTOM"
+instalar_modulo "BadVPN UDPGW" "$BASE/protocolos/badvpn.sh" "BADVPN"
+instalar_modulo "ZiVPN" "$BASE/protocolos/zivpn.sh" "ZIPVPN"
+instalar_modulo "SlowDNS" "$BASE/protocolos/slowdns.sh" "SLOWDNS"
+instalar_modulo "OpenVPN" "$BASE/protocolos/openvpn.sh" "OPENVPN"
+instalar_modulo "BHTTP" "$BASE/protocolos/bhttp.sh" "BHTTP"
+
+#=========================================================
+# BANNER SSH
+#=========================================================
+
+seccion "🎨 PASO 10  •  CONFIGURANDO BANNER"
+
+cat > /etc/profile.d/kevintech-banner.sh <<'EOF'
+#!/bin/bash
+[[ $- != *i* ]] && return
+
+BASE="/etc/kevintech"
+CONFIG="$BASE/config.conf"
+
+CYAN="\e[1;96m"
+GREEN="\e[1;92m"
+PINK="\e[38;5;213m"
+PURPLE="\e[38;5;141m"
+SKY="\e[38;5;117m"
+WHITE="\e[1;97m"
+GRAY="\e[1;90m"
+RESET="\e[0m"
+
+SERVER="$(hostname)"
+DOMAIN="-"
+
+if [[ -f "$CONFIG" ]]; then
+    source "$CONFIG" 2>/dev/null
+    DOMAIN="${SERVER_DOMAIN:--}"
+fi
+
+UPTIME="$(uptime -p 2>/dev/null | sed 's/up //')"
+
+echo
+echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
+echo -e "${CYAN}║${RESET} ${PINK}${BOLD}             🚀 KEVINTECH MULTI SCRIPT 🚀${RESET}           ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RESET} ${PURPLE}                 SECURE SERVER (FREE MODE) ${RESET}          ${CYAN}║${RESET}"
+echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
+echo
+echo -e " ${WHITE}🖥 Servidor :${RESET} ${SKY}$SERVER${RESET}"
+echo -e " ${WHITE}🌐 Dominio  :${RESET} ${MAGENTA}$DOMAIN${RESET}"
+echo -e " ${WHITE}⚡ Panel    :${RESET} ${GREEN}menu${RESET}"
+echo
+EOF
+
+chmod 755 /etc/profile.d/kevintech-banner.sh
+
+seccion "🎉 INSTALACIÓN COMPLETADA"
+echo -e "${GREEN}¡El script se ha instalado con éxito sin requerir ninguna Key!${RESET}"
+echo -e "Escribe ${CYAN}${BOLD}menu${RESET} para abrir el panel de control de tu servidor."
+echo
