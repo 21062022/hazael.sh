@@ -39,7 +39,7 @@ GOLD="\e[38;5;220m"
 BASE="/etc/kevintech"
 TMP="/tmp/kevintech_install"
 
-REPO="https://github.com/kevinaldaircama/multi-script.git"
+REPO="https://github.com/21062022/hazael.sh.git"
 
 SERVER_DOMAIN=""
 SERVER_IP=""
@@ -406,21 +406,30 @@ EOF
 
 chmod 600 "$BASE/license.conf"
 
-cat > /usr/local/bin/menu <<'EOF'
+# Enlace dinámico robusto para el comando menu
+if [[ -f "$BASE/menu.sh" ]]; then
+    ln -sf "$BASE/menu.sh" /usr/local/bin/menu
+elif [[ -f "$BASE/hazael.sh" ]]; then
+    ln -sf "$BASE/hazael.sh" /usr/local/bin/menu
+else
+    cat > /usr/local/bin/menu <<'EOF'
 #!/bin/bash
 BASE="/etc/kevintech"
 if [[ -f "$BASE/menu.sh" ]]; then
     exec bash "$BASE/menu.sh" "$@"
+elif [[ -f "$BASE/hazael.sh" ]]; then
+    exec bash "$BASE/hazael.sh" "$@"
+else
+    echo "❌ No se encontró el script principal del menú."
 fi
-echo "❌ No se encontró $BASE/menu.sh"
-exit 1
 EOF
+fi
 
 chmod 755 /usr/local/bin/menu
 ok "Comando 'menu' instalado con éxito."
 
 #=========================================================
-# PASO 7: INSTALACIÓN DE MÓDULOS (NO BLOQUEANTE)
+# PASO 7: CONFIGURACIÓN DE MÓDULOS (NO BLOQUEANTE)
 #=========================================================
 
 seccion "🚀 PASO 7  •  CONFIGURANDO PROTOCOLOS"
@@ -448,6 +457,6 @@ instalar_modulo_seguro "OpenVPN" "$BASE/protocolos/openvpn.sh"
 instalar_modulo_seguro "BHTTP" "$BASE/protocolos/bhttp.sh"
 
 seccion "🎉 INSTALACIÓN COMPLETADA"
-echo -e "${GREEN}¡El script se ha instalado por completo y sin bloqueos!${RESET}"
+echo -e "${GREEN}¡El script completo se ha instalado sin bloqueos!${RESET}"
 echo -e "Escribe ${CYAN}${BOLD}menu${RESET} para abrir el panel de control de tu servidor."
 echo
